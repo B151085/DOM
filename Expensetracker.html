@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link defer href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <style>
+        label
+        {
+            font-size: 20px;
+            text-align:left ;
+        }
+        input
+        {
+            text-align: center;
+        }
+        input
+        {
+            width: 1000px;
+        }
+    </style>
+</head>
+<body class="form-class">
+    <div class="container" style="border: 2px solid orangered;">
+    <form  action="#" onsubmit="store(event)" id="userdata">
+        <h3 style="color: orange;text-align: center;">Expense tracker </h3>
+        <hr>
+        <label class="form-label" >Expense amount</label> 
+        <input class="form-control" type="number" required name="amount" id="amount" >
+        <label class="form-label">Description</label> 
+        <input class="form-control" type="text" required name="desc" id="desc" > 
+        <label class="form-label">Category</label> 
+
+        <select id="cat">
+            <option>Food</option>
+            <option>Entertainment</option>
+        </select>
+        <br>
+        <button style="background-color: orange;width: 100%;height: 40%;" >Add expense</button>
+        <br>
+        <br>
+
+    </form>
+    </div>
+    <br>
+    <ul id="userDetails">  
+<!-- expense details -->
+
+    </ul>
+    <script>
+        function store(event)
+        {
+        event.preventDefault();
+        var amount=document.getElementById('amount').value;
+        var desc=document.getElementById('desc').value;
+        var cat=document.getElementById('cat').value;
+        var myObj={
+            "Amount":amount,
+            "Description": desc,
+            "Category": cat
+        };
+        var myObj_serialized=JSON.stringify(myObj);
+        localStorage.setItem(desc,myObj_serialized);
+
+        // var my=JSON.parse(localStorage.getItem(email));
+        // storeOnscreen(my);
+        // we can also use serialized object but it gives undefined values on screen so before using it first parse it to unserialized as above two lines
+        storeOnscreen(myObj);
+        }
+        function storeOnscreen(obj)
+        {
+        var text=obj.Amount+" "+obj.Description+ " "+obj.Category;
+        var li=document.createElement('li');
+        li.appendChild(document.createTextNode(text));
+        var delBtn=document.createElement('button');
+        delBtn.textContent='Delete';
+        li.appendChild(delBtn);
+
+        //for edit button
+        var editBtn=document.createElement('button');
+        editBtn.textContent=' Edit';
+        li.appendChild(editBtn);
+
+        var ul=document.getElementById('userDetails');
+        ul.appendChild(li);
+
+
+        delBtn.addEventListener('click',deleteUser);
+        function deleteUser()
+        {
+            // console.log("hare ram");
+            ul.removeChild(li);
+            //removing in local storage
+            // console.log(obj.Email + "is my key")
+            localStorage.removeItem(obj.Description);
+        }
+
+        /// we can write functionality as above but trying this as well for edit
+        editBtn.onclick= ()=>
+        {
+           //deleting first from UI and local storage
+           ul.removeChild(li);
+           localStorage.removeItem(obj.Description);
+           // now get input values in to input fields to edit
+           // get values using id from form
+           document.getElementById('amount').value=obj.Amount;
+           document.getElementById('desc').value=obj.Description;
+           document.getElementById('cat').value=obj.Category;
+        }
+
+        }
+
+
+    </script>
+</body>
+</html>
